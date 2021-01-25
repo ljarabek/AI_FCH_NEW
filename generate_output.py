@@ -61,7 +61,10 @@ def gen_output(run, device_=device,
 
 
 if __name__ == "__main__":
-    r = Run("resunet3d")
-    model_dir = "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/abs_healthy"
+    model_dir = "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v5"
+    dct_dir = os.path.join(model_dir, "settings.json")
+    with open(dct_dir, "r") as f:
+        dct = json.load(f)
+    r = Run(dct=dct)
     with torch.no_grad():
         gen_output(r, model_file=model_dir + "/best_val.pth", output_folder=model_dir + "/pickles")

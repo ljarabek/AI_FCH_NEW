@@ -97,8 +97,44 @@ class Run():
             mid = torch.unsqueeze(mid, dim=1).to(device)
         high = torch.clone(otpt[:, 2])
         zero = torch.zeros_like(real).to(device)
+        if version == 'v5':
+            outsiders_high = torch.max(real - high, other=zero)
+            outsiders_low = torch.max(low - real, zero)
+            loss = torch.pow(outsiders_high, exponent=2) + torch.pow(outsiders_low, exponent=2)
+            # loss = self.tanh(loss).clone()
+            print("Be4 tightness loss")
+            print(loss.mean())
+            # t_loss = torch.abs(high - low)
 
-        if version == 'v3':
+            # Selects values where
+            loss = loss.mean()
+            t_loss_ = torch.pow(torch.max(high - real, other=zero), exponent=2) + \
+                      torch.pow(torch.max(real - low, zero),
+                                exponent=2)  # TODO: lahko daš margin - kot real-low-margin/high-real-margin
+            loss += (tightness * t_loss_).mean()
+            print("after tightness loss")
+            print(loss.mean())
+            loss = loss.mean()
+        elif version == 'v4':
+            outsiders_high = torch.max(real - high, other=zero)
+            outsiders_low = torch.max(low - real, zero)
+            loss = torch.pow(outsiders_high, exponent=2) + torch.pow(outsiders_low, exponent=2)
+            # loss = self.tanh(loss).clone()
+            print("Be4 tightness loss")
+            print(loss.mean())
+            # t_loss = torch.abs(high - low)
+
+            # Selects values where
+            loss = loss.mean()
+            t_loss_high = torch.where(outsiders_high == 0, high, zero)
+            t_loss_low = torch.where(outsiders_low == 0, low, zero)
+            t_loss_ = t_loss_high - t_loss_low  # to ni najbolj prav, ker je alternativa 0, rabla bi pa bit (h+l)/2?
+            t_loss_ = torch.pow(t_loss_, 2)
+            loss += (tightness * t_loss_).mean()
+            print("after tightness loss")
+            print(loss.mean())
+            loss = loss.mean()
+        elif version == 'v3':
             outsiders_high = torch.max(real - high, other=zero)
             outsiders_low = torch.max(low - real, zero)
             loss = torch.pow(outsiders_high, exponent=2) + torch.pow(outsiders_low, exponent=2)
@@ -281,13 +317,13 @@ if __name__ == "__main__":
         'model_name': "resunet3d",
         'log_dir': None,
         'batch_size': 2,
-        'val_length': 4,
-        'healthy_only': True,
+        'val_length': 10,
+        'healthy_only': False,
         'learning_rate': 3e-2,
         'classifications_file': "sample.pkl",
 
-        'loss_version': 'v3',  # LOSS PARAMETERS
-        'tightness': 0.01,
+        'loss_version': 'v5',  # LOSS PARAMETERS
+        'tightness': 0.0005,
         'mean_loss_weight': 0.1,
         'base_loss_scalar': 1,
         'use_recon_loss': False
@@ -299,3 +335,6 @@ if __name__ == "__main__":
 
     run = Run(dct)
     run.train(100)
+
+    #run.model = torch.load("/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v3l_better/best_val.pth")
+    #run.epoch_val()
