@@ -61,10 +61,12 @@ def gen_output(run, device_=device,
 
 
 if __name__ == "__main__":
-    model_dir = "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v5"
-    dct_dir = os.path.join(model_dir, "settings.json")
-    with open(dct_dir, "r") as f:
-        dct = json.load(f)
-    r = Run(dct=dct)
-    with torch.no_grad():
-        gen_output(r, model_file=model_dir + "/best_val.pth", output_folder=model_dir + "/pickles")
+    #for i in range(1,4):
+        model_dir = "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v5_%s"%i
+        #print(model_dir)
+        dct_dir = os.path.join(model_dir, "settings.json")
+        with open(dct_dir, "r") as f:
+            dct = json.load(f)
+        r = Run(dct=dct)
+        with torch.no_grad():
+            gen_output(r, model_file=model_dir + "/best_val.pth", output_folder=model_dir + "/pickles")

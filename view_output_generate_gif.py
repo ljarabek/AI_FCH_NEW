@@ -35,7 +35,8 @@ def save_as_gif(im, seg, save_dir, pet_p=None, ct_p=None):
 
 
 if __name__ == '__main__':
-    main_dir = "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v5"  # "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v3l_better"  # /media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/sigmoid_loss" #"/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/ADAM_better"  # "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/sigmoid_loss"
+    main_dir = "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v5_3"  # "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v3l_better"  # /media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/sigmoid_loss" #"/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/ADAM_better"  # "/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/sigmoid_loss"
+    print(main_dir)
     pickles_dir = main_dir + "/pickles"
     pkls = list()
 

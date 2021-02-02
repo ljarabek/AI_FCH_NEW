@@ -333,8 +333,11 @@ if __name__ == "__main__":
         master_list = [d for d in master_list if
                        d['histo_lokacija'] == "healthy"]
 
-    run = Run(dct)
-    run.train(100)
+    tightness = [0.005, 0.05, 0.5]
+    for t in tightness:
+        dct['tightness'] = t
+        run = Run(dct)
+        run.train(15)
 
-    #run.model = torch.load("/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v3l_better/best_val.pth")
-    #run.epoch_val()
+    # run.model = torch.load("/media/leon/2tbssd/PRESERNOVA/AI_FCH_NEW/run_test/v3l_better/best_val.pth")
+    # run.epoch_val()
