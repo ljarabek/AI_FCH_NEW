@@ -36,9 +36,7 @@ except:
     master_list = get_master_list()
     master_list = add_label(master_list, encoding=m_list_settings['encoding'])  # 0 1 2 3 4
     master_list = add_images(master_list, wanted_shape_ct=m_list_settings['wanted_shape_ct'])
-    # for e in master_list:
-    #    print(e['CT'].shape)
-    #    print(e['PET'].shape)
+
     if "cropping" in m_list_settings:
         master_list = crop_images(master_list, cropping=m_list_settings['cropping'])
 
@@ -65,6 +63,7 @@ class PET_CT_Dataset(Dataset):
     def __init__(self, master_list_=master_list, **kwargs):
         super(PET_CT_Dataset, self).__init__()
         self.master_list = master_list_
+        # self.transform = transform #TODO:implement
 
     def __getitem__(self, idx):
         ct = self.master_list[idx]['CT']
@@ -79,7 +78,7 @@ class PET_CT_Dataset(Dataset):
         pet /= means_std_pet[1]  # / std
         pet = np.expand_dims(pet, 0)
         merged = np.concatenate([ct, pet], 0)
-        # print(merged.shape)
+        print(merged.shape)
         # if merged.shape != (2, 48, 128, 128):
         #    print(master_list[idx])
         return ct, pet, merged, label, self.master_list[idx]  # must be of shape (without N) (N,Cin​,D,H,W)
@@ -90,17 +89,20 @@ class PET_CT_Dataset(Dataset):
 
 if __name__ == "__main__":
     from collections import Counter
+    import torchio as tio
 
-    # p = PET_CT_Dataset()
-    print(len(master_list))
-    all = list()
-    for e in master_list:
-        h = e['histo_lokacija']
-        all.append(h)
-        seg_viewer(e['CT'],e['PET']) #odlično
-        print(e['CT'].shape)
+    p = PET_CT_Dataset()
+
+    for i in p:
+        # print(i)
+        ct, pet, merged, label, _ = i
+        ct = tio.ScalarImage(tensor=merged)
+
+        print(ct.data)
+        print(ct)
+        print(ct.affine)
+        print("success")
         break
-    print(Counter(all))
 
     # for m in master_list:
     #    print(m)

@@ -28,18 +28,18 @@ def process_key(event):
 def previous_slice(ax):
     volume = ax.volume
     segmentation = ax.segmentation # TODO: uncomment this for seg_viewer!
-    ax.index = (ax.index - 1) % volume.shape[0]  # wrap around using %
-    ax.images[0].set_array(volume[ax.index])
-    ax.images[1].set_array(segmentation[ax.index]) # TODO: uncomment this for segmentation!
+    ax.index = (ax.index - 1) % volume.shape[-1]  # wrap around using %
+    ax.images[0].set_array(volume[:,:,ax.index])
+    ax.images[1].set_array(segmentation[:,:,ax.index]) # TODO: uncomment this for segmentation!
     #ax.title(ax.index)
 
 
 def next_slice(ax):
     volume = ax.volume
     segmentation = ax.segmentation
-    ax.index = (ax.index + 1) % volume.shape[0]
-    ax.images[0].set_array(volume[ax.index])
-    ax.images[1].set_array(segmentation[ax.index])
+    ax.index = (ax.index + 1) % volume.shape[-1]
+    ax.images[0].set_array(volume[:,:,ax.index])
+    ax.images[1].set_array(segmentation[:,:,ax.index])
     #ax.title(ax.index)
 
 
@@ -58,9 +58,9 @@ def seg_viewer(volume, segmentation, cmap_ = "Reds"):
     fig, ax = plt.subplots()
     ax.volume = volume
     ax.segmentation = segmentation
-    ax.index = volume.shape[0] // 2
-    ax.imshow(volume[ax.index],cmap='gray') #volume[ax.index]
-    ax.imshow(segmentation[ax.index], cmap=cmap_, alpha=0.2) # prej bil Reds, za pet lahko jet
+    ax.index = volume.shape[-1] // 2
+    ax.imshow(volume[:,:,ax.index],cmap='gray') #volume[ax.index]
+    ax.imshow(segmentation[:,:,ax.index], cmap=cmap_, alpha=0.2) # prej bil Reds, za pet lahko jet
     #ax.title = str(ax.index)
     fig.canvas.mpl_connect('key_press_event', process_key)
     plt.show()

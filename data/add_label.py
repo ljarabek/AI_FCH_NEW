@@ -1,5 +1,5 @@
 import numpy as np
-
+from constants import *
 def clear_nones(l):
     to_delete = list()
     for i, e in enumerate(l):
@@ -25,5 +25,6 @@ def add_label(master, encoding=('histo_lokacija', ["DS", "DZ", "LS", "LZ", "heal
     for i, e in enumerate(master):
         new_e = make_one_hot_encoded(e, encode=encoding)
         master[i] = new_e
+
     master = clear_nones(master)
     return master

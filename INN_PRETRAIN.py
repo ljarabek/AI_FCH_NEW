@@ -122,9 +122,6 @@ class Run():
             # loss = self.tanh(loss).clone()
             print("Be4 tightness loss")
             print(loss.mean())
-            # t_loss = torch.abs(high - low)
-
-            # Selects values where
             loss = loss.mean()
             t_loss_high = torch.where(outsiders_high == 0, high, zero)
             t_loss_low = torch.where(outsiders_low == 0, low, zero)
@@ -322,7 +319,7 @@ if __name__ == "__main__":
         'learning_rate': 3e-2,
         'classifications_file': "sample.pkl",
 
-        'loss_version': 'v5',  # LOSS PARAMETERS
+        'loss_version': 'v1',  # LOSS PARAMETERS
         'tightness': 0.0005,
         'mean_loss_weight': 0.1,
         'base_loss_scalar': 1,

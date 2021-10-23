@@ -116,8 +116,8 @@ class ResNet(nn.Module):
                  # sample_duration,
                  shortcut_type='B',
                  num_classes=5,
-                 activation="softmax"):
-        self.acivation = activation
+                 ):  # activation="softmax"
+        self.acivation = None
         self.inplanes = 64
         super(ResNet, self).__init__()
         self.conv1 = nn.Conv3d(
@@ -139,9 +139,9 @@ class ResNet(nn.Module):
             block, 512, layers[3], shortcut_type, stride=2)
         # last_duration = int(math.ceil(sample_duration / 16))
         # last_size = int(math.ceil(sample_size / 32))
-        self.avgpool = nn.AvgPool3d(
-            (1, 2, 4), stride=1)  # BEFORE WAS 8,8,4  # (2, 4, 8) za
-        self.fc = nn.Linear(512, num_classes)  # for resnet10 set to 512!! 2048
+        self.avgpool = nn.AdaptiveAvgPool3d((1, 1, 1))
+        # (2,2,4), stride=1)  # BEFORE WAS 8,8,4  # (2, 4, 8) za # 1,2,4
+        self.fc = nn.Linear(2048, num_classes)  # for resnet10 set to 512!! 2048
         self.softmax = nn.Softmax(dim=1)
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -190,9 +190,6 @@ class ResNet(nn.Module):
 
         x = x.view(x.size(0), -1)
         x = self.fc(x)
-        if self.acivation == None:
-            return x
-        x = self.softmax(x)
         return x
 
 
